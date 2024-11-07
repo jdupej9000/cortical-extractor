@@ -1,6 +1,7 @@
 ﻿using CorticalExtract.AxisRefinement;
 using CorticalExtract.DataStructures;
 using System;
+using System.Numerics;
 using System.Text;
 
 namespace CorticalExtract.Processing
@@ -40,8 +41,8 @@ namespace CorticalExtract.Processing
         int numRays;
         bool useHmh;
         float[] voxelDimensions;
-        Point2f[,] innerBoundary;
-        Point2f[,] outerBoundary;
+        Vector2[,] innerBoundary;
+        Vector2[,] outerBoundary;
         float[,] thickness;
         float[,] segmentAreas;
         ImageStack caSlices;
@@ -82,12 +83,12 @@ namespace CorticalExtract.Processing
             get { return caSlices; }
         }
 
-        public Point2f[,] InnerBoundary
+        public Vector2[,] InnerBoundary
         {
             get { return innerBoundary; }
         }
 
-        public Point2f[,] OuterBoundary
+        public Vector2[,] OuterBoundary
         {
             get { return outerBoundary; }
         }
@@ -156,9 +157,9 @@ namespace CorticalExtract.Processing
         {
             int n = stk.Slices;
 
-            innerBoundary = new Point2f[n, numRays];
-            outerBoundary = new Point2f[n, numRays];
-            Point2f center = new Point2f((float)stk.Width / 2, (float)stk.Height / 2);
+            innerBoundary = new Vector2[n, numRays];
+            outerBoundary = new Vector2[n, numRays];
+            Vector2 center = new Vector2((float)stk.Width / 2, (float)stk.Height / 2);
 
             //Parallel.For(0, n, (i) =>
             for(int i = 0; i < n; i++)
@@ -174,7 +175,7 @@ namespace CorticalExtract.Processing
                 for (int j = 0; j < numRays; j++)
                 {
                     float theta = (float)(2.0 * Math.PI / (float)numRays * j);
-                    Point2f direction = new Point2f((float)(Math.Cos(theta)), (float)(Math.Sin(theta)));
+                    Vector2 direction = new Vector2((float)(Math.Cos(theta)), (float)(Math.Sin(theta)));
 
                     RayMarchResult t0, t1, t2;
 
@@ -215,7 +216,7 @@ namespace CorticalExtract.Processing
                 for(int j = 0; j < numRays; j++)
                 {
                     float theta = (float)(2.0 * Math.PI / (float)numRays * j);
-                    Point2f direction = new Point2f((float)(Math.Cos(theta)), (float)(Math.Sin(theta)));
+                    Vector2 direction = new Vector2((float)(Math.Cos(theta)), (float)(Math.Sin(theta)));
 
                     innerBoundary[i, j] = radiusInnerImp[j] * direction;
                     outerBoundary[i, j] = radiusOuterImp[j] * direction;
@@ -234,15 +235,15 @@ namespace CorticalExtract.Processing
             {
                 for (int j = 0; j < numRays; j++)
                 {
-                    Point2f outerPt = outerBoundary[i, j];
-                    Point2f innerPt = new Point2f(0, 0);
+                    Vector2 outerPt = outerBoundary[i, j];
+                    Vector2 innerPt = new Vector2(0, 0);
                     float bestDist = float.MaxValue;
 
                     for (int k = 0; k < numRays; k++)
                     {
-                        Point2f a0 = innerBoundary[i, k];
-                        Point2f a1 = innerBoundary[i, (k + 1) % numRays];
-                        Point2f proj;
+                        Vector2 a0 = innerBoundary[i, k];
+                        Vector2 a1 = innerBoundary[i, (k + 1) % numRays];
+                        Vector2 proj;
                         float dist = Utils.PointSegmentDistance(a0, a1, outerPt, out proj);
                         if (bestDist > dist)
                         {
@@ -281,10 +282,10 @@ namespace CorticalExtract.Processing
                     int j1 = j0 + 1;
                     if (j1 >= m) j1 = 0;
 
-                    float trIn = Utils.TriangleAreaAniso(new Point2f(0, 0),
+                    float trIn = Utils.TriangleAreaAniso(new Vector2(0, 0),
                         innerBoundary[i, j0], innerBoundary[i, j1], t0, t1, voxDim);
 
-                    float trOut = Utils.TriangleAreaAniso(new Point2f(0, 0),
+                    float trOut = Utils.TriangleAreaAniso(new Vector2(0, 0),
                         outerBoundary[i, j0], outerBoundary[i, j1], t0, t1, voxDim);
 
                     if (!float.IsNaN(trIn)) innerAccum += trIn;
@@ -359,7 +360,7 @@ namespace CorticalExtract.Processing
             return sb.ToString();
         }
 
-        public string BoundaryToMesh(Point2f[,] bnd, Point3f[] axis, Point3f t0, Point3f t1, float[] voxDim)
+        public string BoundaryToMesh(Vector2[,] bnd, Point3f[] axis, Point3f t0, Point3f t1, float[] voxDim)
         {
             StringBuilder sb = new StringBuilder();
 

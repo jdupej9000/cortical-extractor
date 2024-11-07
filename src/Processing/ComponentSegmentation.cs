@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -52,7 +53,7 @@ namespace CorticalExtract.Processing
             set { internalThresh = value; }
         }
 
-        public Point2f GetLargestSegmentCentroid()
+        public Vector2 GetLargestSegmentCentroid()
         {
             CleanMask();
             FindSegments(SegmentRuleAboveEq);
@@ -162,7 +163,7 @@ namespace CorticalExtract.Processing
             return bestIdx;
         }
 
-        private Point2f SegmentCentroid(byte idx)
+        private Vector2 SegmentCentroid(byte idx)
         {
             double x = 0, y = 0;
             int n = 0;
@@ -180,9 +181,9 @@ namespace CorticalExtract.Processing
                 }
             }
 
-            if (n == 0) return new Point2f();
+            if (n == 0) return new Vector2();
 
-            return new Point2f(
+            return new Vector2(
                 (float)(x / (double)n),
                 (float)(y / (double)n));
         }

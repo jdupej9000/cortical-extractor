@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -48,7 +49,7 @@ namespace CorticalExtract.Processing
         int halfMaxRadius;
 
         const float DELTA = 0.25f;
-        public delegate float RayCastDelegate(Point2f o, Point2f d, float t0, float thr);
+        public delegate float RayCastDelegate(Vector2 o, Vector2 d, float t0, float thr);
 
         public int ActiveSlice
         {
@@ -68,7 +69,7 @@ namespace CorticalExtract.Processing
             set { halfMaxRadius = value; }
         }
 
-        public bool VerifyRise(Point2f origin, Point2f direction, float t0, float thresh, float minRun=3.0f)
+        public bool VerifyRise(Vector2 origin, Vector2 direction, float t0, float thresh, float minRun=3.0f)
         {
             float t = 0;
 
@@ -85,7 +86,7 @@ namespace CorticalExtract.Processing
             return true;
         }
 
-        public float RayCastRise(Point2f origin, Point2f direction, float t0, float thresh)
+        public float RayCastRise(Vector2 origin, Vector2 direction, float t0, float thresh)
         {
             float f0 = stack.SampleSlice(origin.X + t0 * direction.X, origin.Y + t0 * direction.Y, slice);
             float t = t0 + DELTA;
@@ -110,12 +111,12 @@ namespace CorticalExtract.Processing
             return MaxRadius;
         }
 
-        public float RayCastFall(Point2f origin, Point2f direction, float t0, float thresh)
+        public float RayCastFall(Vector2 origin, Vector2 direction, float t0, float thresh)
         {
             return RayCastFall(origin, direction, t0, thresh, thresh);
         }
 
-        public float RayCastFall(Point2f origin, Point2f direction, float t0, float thresh1, float thresh2)
+        public float RayCastFall(Vector2 origin, Vector2 direction, float t0, float thresh1, float thresh2)
         {
             float f0 = stack.SampleSlice(origin.X + t0 * direction.X, origin.Y + t0 * direction.Y, slice);
             float t = t0 + DELTA;
@@ -148,7 +149,7 @@ namespace CorticalExtract.Processing
             return MaxRadius;
         }
 
-        public float RayCastFallReverse(Point2f origin, Point2f direction, float t0, float thresh)
+        public float RayCastFallReverse(Vector2 origin, Vector2 direction, float t0, float thresh)
         {
             float f0 = stack.SampleSlice(origin.X + t0 * direction.X, origin.Y + t0 * direction.Y, slice);
             float t = t0 - DELTA;
@@ -183,12 +184,12 @@ namespace CorticalExtract.Processing
             return 0;
         }
 
-        public RayMarchResult HalfMaxHeight(Point2f origin, Point2f direction, float t0, float thr0, RayCastDelegate rc, bool outside = true)
+        public RayMarchResult HalfMaxHeight(Vector2 origin, Vector2 direction, float t0, float thr0, RayCastDelegate rc, bool outside = true)
         {
             return HalfMaxHeight(origin, direction, t0, thr0, rc, outside, halfMaxRadius, halfMaxRadius);
         }
 
-        public RayMarchResult HalfMaxHeight(Point2f origin, Point2f direction, float t0, float thr0, RayCastDelegate rc, bool outside, int hmhRadiusIn, int hmhRadiusOut)
+        public RayMarchResult HalfMaxHeight(Vector2 origin, Vector2 direction, float t0, float thr0, RayCastDelegate rc, bool outside, int hmhRadiusIn, int hmhRadiusOut)
         {
             float r0 = rc(origin, direction, t0, thr0);
 
@@ -214,7 +215,7 @@ namespace CorticalExtract.Processing
             return ret;
         }
 
-        public float AutoThreshold(Point2f origin, Point2f direction, float maxRadius)
+        public float AutoThreshold(Vector2 origin, Vector2 direction, float maxRadius)
         {
             float t = 0;
             List<float> path = new List<float>();

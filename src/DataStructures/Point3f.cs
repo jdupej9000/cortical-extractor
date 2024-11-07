@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -41,9 +42,9 @@ namespace CorticalExtract.DataStructures
             set { z = value; }
         }
 
-        public Point2f XY
+        public Vector2 XY
         {
-            get { return new Point2f(x, y); }
+            get { return new Vector2(x, y); }
         }
     
 

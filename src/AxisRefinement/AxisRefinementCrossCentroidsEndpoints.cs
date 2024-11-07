@@ -3,6 +3,7 @@ using CorticalExtract.Processing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,12 +15,11 @@ namespace CorticalExtract.AxisRefinement
         {
             this.alpha = alpha;
             this.beta = beta;
-            this.mainStack = stk;            
+            this.mainStack = stk;
         }
 
         float alpha, beta;
         ImageStack mainStack;
-        IAxisRefinement refinement;
 
         public Point3f[] Process(ImageStack stk, Point3f normal, Point3f binormal, Point3f[] origins)
         {
@@ -31,7 +31,7 @@ namespace CorticalExtract.AxisRefinement
             Point3f[] centroids = new Point3f[n];
             for (int i = 0; i < n; i++)
             {
-                Point2f sliceCenter = arcc.FindSliceCentroidIterative(stk, i, 30, 500);
+                Vector2 sliceCenter = arcc.FindSliceCentroidIterative(stk, i, 30, 500);
                 Point3f refined = origins[i] + sliceCenter.X * normal + sliceCenter.Y * binormal;
                 centroids[i] = refined;
             }

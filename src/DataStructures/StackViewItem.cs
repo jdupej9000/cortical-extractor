@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -39,7 +40,7 @@ namespace CorticalExtract.DataStructures
             this.mask = mask;
         }
 
-        public StackViewItem(string name, ImageStack stk, Point2f[,] inner, Point2f[,] outer)
+        public StackViewItem(string name, ImageStack stk, Vector2[,] inner, Vector2[,] outer)
             : this()
         {
             this.name = name;
@@ -52,13 +53,13 @@ namespace CorticalExtract.DataStructures
         public ImageStack stack;
 
         public byte[] mask = null;
-        public Point2f[,] inner = null;
-        public Point2f[,] outer = null;
+        public Vector2[,] inner = null;
+        public Vector2[,] outer = null;
         public Point3f[] center;
         public Point3f t0, t1;
         public float[] voxDim;
 
-        public Point3f TransformPoint(Point2f pt, int slice)
+        public Point3f TransformPoint(Vector2 pt, int slice)
         {
             int idx = Math.Min(slice, center.Length-1);
             Point3f ret = center[idx] + (pt.X - stack.Width / 2) * t0 + (pt.Y - stack.Height / 2) * t1;

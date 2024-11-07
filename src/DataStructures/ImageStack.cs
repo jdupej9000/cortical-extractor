@@ -1,6 +1,7 @@
 ﻿using CorticalExtract.Processing;
 using System;
 using System.IO;
+using System.Numerics;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -129,7 +130,7 @@ namespace CorticalExtract.DataStructures
             set { data[Utils.Clamp(z, 0, slices-1)][Idx(x, y)] = value; }
         }
 
-        public float Sample(Point3f p)
+        public float Sample(Vector3 p)
         {
             return Sample(p.X, p.Y, p.Z);
         }

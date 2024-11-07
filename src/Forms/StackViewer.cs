@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using CorticalExtract.DataStructures;
 using System.Drawing.Imaging;
+using System.Numerics;
 
 namespace CorticalExtract.Forms
 {
@@ -81,15 +82,17 @@ namespace CorticalExtract.Forms
         protected byte[] mask;
         StackViewItem svi = null;
         string lmAannot = string.Empty, lmBannot = string.Empty;
-        Point3f lmA = null, lmB = null;
+
+        bool lmAset = false, lmBset = false;
+        Vector3 lmA = Vector3.Zero, lmB = Vector3.Zero;
 
         public void SetItem(StackViewItem svi)
         {
             this.svi = svi;
             stack = svi.stack;
             mask = svi.mask;
-            lmA = null;
-            lmB = null;
+            lmAset = false;
+            lmBset = false;
             picView.Invalidate();
         }
 
@@ -213,14 +216,14 @@ namespace CorticalExtract.Forms
                 Pen penLm = new Pen(Color.Red);
                 Brush brushLm = new SolidBrush(Color.Red);
 
-                if(lmA != null)
+                if(lmAset)
                 {
                     e.Graphics.DrawLine(penLm, lmA.X * scale - 2, lmA.Y * scale, lmA.X * scale + 2, lmA.Y * scale);
                     e.Graphics.DrawLine(penLm, lmA.X * scale, lmA.Y * scale - 1, lmA.X * scale, lmA.Y * scale + 2);
                     e.Graphics.DrawString(string.Format("A {0}", lmA.Z), Font, brushLm, lmA.X * scale + 2, lmA.Y * scale + 2);
                 }
 
-                if (lmB != null)
+                if (lmBset)
                 {
                     e.Graphics.DrawLine(penLm, lmB.X * scale - 2, lmB.Y * scale, lmB.X * scale + 2, lmB.Y * scale);
                     e.Graphics.DrawLine(penLm, lmB.X * scale, lmB.Y * scale - 1, lmB.X * scale, lmB.Y * scale + 2);
@@ -245,9 +248,9 @@ namespace CorticalExtract.Forms
             if (!int.TryParse(toolStripTextBox1.Text, out slice)) return;
 
             if (tsbLmA.Checked)            
-                lmA = new Point3f((float)e.X / scale, (float)e.Y / scale, slice);
+                lmA = new Vector3((float)e.X / scale, (float)e.Y / scale, slice);
             else if (tsbLmB.Checked)
-                lmB = new Point3f((float)e.X / scale, (float)e.Y / scale, slice);
+                lmB = new Vector3((float)e.X / scale, (float)e.Y / scale, slice);
 
             if (!keepChecked)
             {
@@ -255,11 +258,11 @@ namespace CorticalExtract.Forms
                 tsbLmB.Checked = false;
             }
 
-            if (lmA != null && lmB != null)
+            if (lmAset && lmBset)
             {
-                Point3f a = svi.TransformPoint(lmA.XY, Math.Max(0, (int)lmA.Z));
-                Point3f b = svi.TransformPoint(lmB.XY, Math.Max(0, (int)lmB.Z));
-                float d = Point3f.DistanceAniso(a, b, svi.voxDim);
+                Vector3 a = svi.TransformPoint(lmA.XY(), Math.Max(0, (int)lmA.Z));
+                Vector3 b = svi.TransformPoint(lmB.XY(), Math.Max(0, (int)lmB.Z));
+                float d = VectorUtils.DistanceAniso(a, b, svi.voxDim);
 
                 string msg = string.Format("d ={0:#####0.000}", d);
                 MeasurementMessage(this, msg);

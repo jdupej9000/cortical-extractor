@@ -11,9 +11,9 @@ namespace CorticalExtract.DataStructures
     {
         private StackViewItem()
         {
-            center = new Point3f[] { new Point3f(0, 0, 0) };
-            t0 = new Point3f(1, 0, 0);
-            t1 = new Point3f(0, 1, 0);
+            center = new Vector3[] { new Vector3(0, 0, 0) };
+            t0 = new Vector3(1, 0, 0);
+            t1 = new Vector3(0, 1, 0);
             voxDim = new float[3] { 1, 1, 1 };
         }
 
@@ -55,14 +55,14 @@ namespace CorticalExtract.DataStructures
         public byte[] mask = null;
         public Vector2[,] inner = null;
         public Vector2[,] outer = null;
-        public Point3f[] center;
-        public Point3f t0, t1;
+        public Vector3[] center;
+        public Vector3 t0, t1;
         public float[] voxDim;
 
-        public Point3f TransformPoint(Vector2 pt, int slice)
+        public Vector3 TransformPoint(Vector2 pt, int slice)
         {
             int idx = Math.Min(slice, center.Length-1);
-            Point3f ret = center[idx] + (pt.X - stack.Width / 2) * t0 + (pt.Y - stack.Height / 2) * t1;
+            Vector3 ret = center[idx] + (pt.X - stack.Width / 2) * t0 + (pt.Y - stack.Height / 2) * t1;
             return ret;
         }
     }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,10 +22,10 @@ namespace CorticalExtract.AxisRefinement
 
         float beta;
 
-        public Point3f[] Process(Point3f[] a)
+        public Vector3[] Process(Vector3[] a)
         {
             int n = a.Length;
-            Point3f[] ret = new Point3f[n];
+            Vector3[] ret = new Vector3[n];
 
             for (int i = 0; i < n; i++)
             {
@@ -34,14 +35,14 @@ namespace CorticalExtract.AxisRefinement
                 for (int j = 0; j < n; j++)
                 {
                     float dist = j - i;
-                    float weight = (float)Math.Exp(-dist * dist / beta);
+                    float weight = MathF.Exp(-dist * dist / beta);
                     x += weight * a[j].X;
                     y += weight * a[j].Y;
                     z += weight * a[j].Z;
                     weightSum += weight;
                 }
 
-                ret[i] = new Point3f(x / weightSum, y / weightSum, z / weightSum);
+                ret[i] = new Vector3(x / weightSum, y / weightSum, z / weightSum);
             }
 
             return ret;

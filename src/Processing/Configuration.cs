@@ -137,23 +137,14 @@ namespace CorticalExtract.Processing
 
         public IAxisRefinement GetAxisRefinement()
         {
-            switch(AxisDetection)
+            return AxisDetection switch
             {
-                case AxisMode.Landmarks:
-                    return new AxisRefinementNone();
-
-                case AxisMode.CrossSectionCentroids:
-                    return new AxisRefinementCrossCentroids(new PassthroughPathSmoothing());
-
-                case AxisMode.CrossSectionLinear:
-                    return new AxisRefinementCrossCentroids(new LinearPathSmoothing(), true);
-
-                case AxisMode.CrossSectionGaussian:
-                    return new AxisRefinementCrossCentroids(new GaussianPathSmoothing(AxisGaussianBandwidth));
-                    break;
-            }
-
-            return null;
+                AxisMode.Landmarks => new AxisRefinementNone(),
+                AxisMode.CrossSectionCentroids => new AxisRefinementCrossCentroids(new PassthroughPathSmoothing()),
+                AxisMode.CrossSectionLinear => new AxisRefinementCrossCentroids(new LinearPathSmoothing(), true),
+                AxisMode.CrossSectionGaussian => new AxisRefinementCrossCentroids(new GaussianPathSmoothing(AxisGaussianBandwidth)),
+                _ => null
+            };
         }
     }
 }

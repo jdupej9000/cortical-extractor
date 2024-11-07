@@ -106,10 +106,10 @@ namespace CorticalExtract.AxisRefinement
             return segmentCenter - center;
         }
 
-        public Point3f[] Process(ImageStack stk, Point3f normal, Point3f binormal, Point3f[] origins)
+        public Vector3[] Process(ImageStack stk, Vector3 normal, Vector3 binormal, Vector3[] origins)
         {
             int n = origins.Length;
-            Point3f[] ret = new Point3f[n];
+            Vector3[] ret = new Vector3[n];
 
             for(int i = 0; i < n; i++)
             {
@@ -117,7 +117,7 @@ namespace CorticalExtract.AxisRefinement
                     FindSliceCentroidNaive(stk, i, 40) :
                     //FindSliceCentroidIterative(stk, i, 22, 400, Tolerance, MaxIter);
                     FindSliceCentroidConnected(stk, i, 400);
-                Point3f refined = origins[i] + sliceCenter.X * normal + sliceCenter.Y * binormal;
+                Vector3 refined = origins[i] + sliceCenter.X * normal + sliceCenter.Y * binormal;
                 ret[i] = refined;
             }
 

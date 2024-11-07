@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,9 +26,9 @@ namespace CorticalExtract
             voxelFormat = ImageStack.VoxelFormat.FloatBE;
             voxDim = new float[3] {1,1,1};            
 
-            lms = new Point3f[] {new Point3f(129,264,408),
-                new Point3f(166,220,1061),
-                new Point3f(166,275,487)};
+            lms = new Vector3[] {new Vector3(129,264,408),
+                new Vector3(166,220,1061),
+                new Vector3(166,275,487)};
 
             stk = ImageStack.FromFile(fileName, width, height, slices, voxelFormat, voxDim);
             stk.OffsetAll(-1000);
@@ -44,7 +45,7 @@ namespace CorticalExtract
         int width, height, slices;
         ImageStack.VoxelFormat voxelFormat;
         float[] voxDim;
-        Point3f[] lms;
+        Vector3[] lms;
         ImageStack stk;
 
 

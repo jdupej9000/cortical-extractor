@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,7 +17,7 @@ namespace CorticalExtract.Processing
 
         protected ImageStack stack;
 
-        public ImageStack Reslice(Point3f[] center, Point3f normal, Point3f binormal, int radius)
+        public ImageStack Reslice(Vector3[] center, Vector3 normal, Vector3 binormal, int radius)
         {
             int n = center.Length;
 
@@ -29,7 +30,7 @@ namespace CorticalExtract.Processing
                 {
                     for (int x = 0; x < 2 * radius + 1; x++)
                     {
-                        Point3f xij = center[i] + (float)(x - radius) * normal + (float)(y - radius) * binormal;
+                        Vector3 xij = center[i] + (float)(x - radius) * normal + (float)(y - radius) * binormal;
                         ret[x, y, i] = stack.Sample(xij);
                     }
                 }

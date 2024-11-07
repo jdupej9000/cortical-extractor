@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,6 +10,6 @@ namespace CorticalExtract.AxisRefinement
 {
     public interface IAxisRefinement
     {
-        Point3f[] Process(ImageStack stk, Point3f normal, Point3f binormal, Point3f[] origins);
+        Vector3[] Process(ImageStack stk, Vector3 normal, Vector3 binormal, Vector3[] origins);
     }
 }

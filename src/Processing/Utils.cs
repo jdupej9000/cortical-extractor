@@ -22,11 +22,11 @@ namespace CorticalExtract.Processing
             return (1 - r) * a + r * b;
         }
 
-        public static Point3f[] Seq(Point3f from, Point3f to, int k)
+        public static Vector3[] Seq(Vector3 from, Vector3 to, int k)
         {
-            Point3f[] ret = new Point3f[k];
+            Vector3[] ret = new Vector3[k];
 
-            Point3f d = (to - from) * (1.0f / (float)(k - 1));
+            Vector3 d = (to - from) * (1.0f / (float)(k - 1));
 
             for (int i = 0; i < k; i++)
                 ret[i] = from + (float)i * d;
@@ -100,7 +100,7 @@ namespace CorticalExtract.Processing
             a = muY - b * muX;
         }
 
-        public static float[] ExtractCoordinate(Point3f[] x, int c)
+        public static float[] ExtractCoordinate(Vector3[] x, int c)
         {
             int n = x.Length;
             float[] ret = new float[n];
@@ -147,22 +147,22 @@ namespace CorticalExtract.Processing
             return Vector2.Distance(b, proj);
         }
 
-        public static float TriangleArea(Point3f a, Point3f b, Point3f c)
+        public static float TriangleArea(Vector3 a, Vector3 b, Vector3 c)
         {
-            return 0.5f * Point3f.Cross(b - a, c - a).Length;
+            return 0.5f * Vector3.Cross(b - a, c - a).Length();
         }
 
-        public static Point3f PointFromPlane(Vector2 pt, Point3f t0, Point3f t1)
+        public static Vector3 PointFromPlane(Vector2 pt, Vector3 t0, Vector3 t1)
         {
             return pt.X * t0 + pt.Y * t1;
         }
 
-        public static Point3f PointAniso(Point3f pt, float[] voxDim)
+        public static Vector3 PointAniso(Vector3 pt, float[] voxDim)
         {
-            return new Point3f(pt.X * voxDim[0], pt.Y * voxDim[1], pt.Z * voxDim[2]);
+            return new Vector3(pt.X * voxDim[0], pt.Y * voxDim[1], pt.Z * voxDim[2]);
         }
 
-        public static float TriangleAreaAniso(Vector2 a, Vector2 b, Vector2 c, Point3f t0, Point3f t1, float[] voxDim)
+        public static float TriangleAreaAniso(Vector2 a, Vector2 b, Vector2 c, Vector3 t0, Vector3 t1, float[] voxDim)
         {
             return TriangleArea(PointAniso(PointFromPlane(a, t0, t1), voxDim),
                 PointAniso(PointFromPlane(b, t0, t1), voxDim),

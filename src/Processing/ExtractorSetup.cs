@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,9 +25,9 @@ namespace CorticalExtract.Processing
             ParseFloat(parts[6], voxDim[1], out voxDim[1]);
             ParseFloat(parts[7], voxDim[2], out voxDim[2]);
             ParseFloat(parts[8], 0, out offset);
-            ParsePoint3f(parts[9], parts[10], parts[11], new Point3f(0, 0, 0), out lm0);
-            ParsePoint3f(parts[12], parts[13], parts[14], new Point3f(0, 0, 0), out lm1);
-            ParsePoint3f(parts[15], parts[16], parts[17], new Point3f(0, 0, 0), out lmd);
+            ParseVector3(parts[9], parts[10], parts[11], Vector3.Zero, out lm0);
+            ParseVector3(parts[12], parts[13], parts[14], Vector3.Zero, out lm1);
+            ParseVector3(parts[15], parts[16], parts[17], Vector3.Zero, out lmd);
             pathDestProfile = parts[18];
             pathDestAxis = parts[19];
             pathDestSegments = parts[20];
@@ -39,7 +40,7 @@ namespace CorticalExtract.Processing
         public float offset;
         public string refinement;
         public float refineParam;
-        public Point3f lm0, lm1, lmd;
+        public Vector3 lm0, lm1, lmd;
         public string pathDestProfile, pathDestAxis, pathDestSegments;
         public float alpha, beta;
         public int outSlices;
@@ -77,7 +78,7 @@ namespace CorticalExtract.Processing
             return def;
         }
 
-        void ParsePoint3f(string tX, string tY, string tZ, Point3f def, out Point3f dest)
+        void ParseVector3(string tX, string tY, string tZ, Vector3 def, out Vector3 dest)
         {
             float x, y, z;
             bool valid = true;
@@ -85,7 +86,7 @@ namespace CorticalExtract.Processing
             valid &= float.TryParse(tY, out y);
             valid &= float.TryParse(tZ, out z);
 
-            if (valid) dest = new Point3f(x, y, z);
+            if (valid) dest = new Vector3(x, y, z);
             else dest = def;
         }
     }

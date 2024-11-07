@@ -3,6 +3,7 @@ using CorticalExtract.Processing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,7 +15,7 @@ namespace CorticalExtract.AxisRefinement
         {
         }
 
-        public static float[] LineParams(Point3f[] y, float[] x)
+        public static float[] LineParams(Vector3[] y, float[] x)
         {
             float ax, bx, ay, by, az, bz;
             int n = y.Length;
@@ -26,16 +27,16 @@ namespace CorticalExtract.AxisRefinement
             return new float[6] { ax, bx, ay, by, az, bz };
         }
 
-        public Point3f[] Process(Point3f[] y)
+        public Vector3[] Process(Vector3[] y)
         {
             int n = y.Length;
             float[] x = Utils.Seq(0, n-1, n);
             float[] p = LineParams(y, x);
 
-            Point3f[] ret = new Point3f[n];
+            Vector3[] ret = new Vector3[n];
             for (int i = 0; i < n; i++)
             {
-                ret[i] = new Point3f(p[0] + x[i] * p[1], p[2] + x[i] * p[3], p[4] + x[i] * p[5]);
+                ret[i] = new Vector3(p[0] + x[i] * p[1], p[2] + x[i] * p[3], p[4] + x[i] * p[5]);
             }
 
             return ret;

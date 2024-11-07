@@ -21,37 +21,37 @@ namespace CorticalExtract.AxisRefinement
         float alpha, beta;
         ImageStack mainStack;
 
-        public Point3f[] Process(ImageStack stk, Point3f normal, Point3f binormal, Point3f[] origins)
+        public Vector3[] Process(ImageStack stk, Vector3 normal, Vector3 binormal, Vector3[] origins)
         {
             AxisRefinementCrossCentroids arcc = new AxisRefinementCrossCentroids();
 
             int n = origins.Length;
 
             // find per-slice centroids
-            Point3f[] centroids = new Point3f[n];
+            Vector3[] centroids = new Vector3[n];
             for (int i = 0; i < n; i++)
             {
                 Vector2 sliceCenter = arcc.FindSliceCentroidIterative(stk, i, 30, 500);
-                Point3f refined = origins[i] + sliceCenter.X * normal + sliceCenter.Y * binormal;
+                Vector3 refined = origins[i] + sliceCenter.X * normal + sliceCenter.Y * binormal;
                 centroids[i] = refined;
             }
 
             // fit line to centroids
             float[] x = Utils.Seq(alpha, beta, n);
             float[] lineArgs = LinearPathSmoothing.LineParams(centroids, x);
-            Point3f p0 = new Point3f(lineArgs[0], lineArgs[2], lineArgs[4]);
-            Point3f p1 = new Point3f(lineArgs[0] + lineArgs[1], lineArgs[2] + lineArgs[3], lineArgs[4] + lineArgs[5]);
+            Vector3 p0 = new Vector3(lineArgs[0], lineArgs[2], lineArgs[4]);
+            Vector3 p1 = new Vector3(lineArgs[0] + lineArgs[1], lineArgs[2] + lineArgs[3], lineArgs[4] + lineArgs[5]);
 
             // adjust centroids to surface with HMH
             float t0 = SearchFallHmh(p0, p1, 0.05f, -0.001f, -0.1f);
             float t1 = SearchFallHmh(p0, p1, 0.95f, 0.001f, 1.1f);
-            Point3f pp0 = p0 + t0 * (p1 - p0);
-            Point3f pp1 = p0 + t1 * (p1 - p0);
+            Vector3 pp0 = p0 + t0 * (p1 - p0);
+            Vector3 pp1 = p0 + t1 * (p1 - p0);
 
-            return new Point3f[2] { pp0, pp1 };
+            return new Vector3[2] { pp0, pp1 };
         }
 
-        protected float SearchFallHmh(Point3f p0, Point3f p1, float t0, float dt, float tlimit, float thresh = 300, int hmhRadius = 4)
+        protected float SearchFallHmh(Vector3 p0, Vector3 p1, float t0, float dt, float tlimit, float thresh = 300, int hmhRadius = 4)
         {
             float r0 = SearchFall(p0, p1, t0, dt, tlimit, thresh);
 
@@ -68,7 +68,7 @@ namespace CorticalExtract.AxisRefinement
             return SearchFall(p0, p1, r0 - (float)hmhRadius * dt, dt, tlimit, halfMax);
         }
 
-        protected float SearchFall(Point3f p0, Point3f p1, float t0, float dt, float tlimit, float thresh = 250)
+        protected float SearchFall(Vector3 p0, Vector3 p1, float t0, float dt, float tlimit, float thresh = 250)
         {
             float f0 = mainStack.Sample(p0 + t0 * (p1 - p0));
             float t = t0 + dt;

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -20,7 +21,7 @@ namespace CorticalExtract.Processing
         }
 
         string sourcePath, destPath;
-        Point3f landmark0, landmark1, landmarkD;
+        Vector3 landmark0, landmark1, landmarkD;
         int[] voxCount;
         int numSlices, numRays;
         float t0, t1, thresh;
@@ -45,9 +46,9 @@ namespace CorticalExtract.Processing
             voxCount = new int[3] { 512, 512, 937 };
             voxDim = new float[3] { 1, 1, 1 };
             voxFmt = ImageStack.VoxelFormat.FloatBE;
-            landmark0 = new Point3f(0, 0, 0);
-            landmark1 = new Point3f(0, 0, 0);
-            landmarkD = new Point3f(0, 0, 0);
+            landmark0 = Vector3.Zero;
+            landmark1 = Vector3.Zero;
+            landmarkD = Vector3.Zero;
 
             numSlices = 100;
             numRays = 50;
@@ -224,7 +225,7 @@ namespace CorticalExtract.Processing
             int width, height, slices;
             ImageStack.VoxelFormat voxelFormat;
             float[] voxDim;
-            Point3f[] lms;
+            Vector3[] lms;
             ImageStack stk;
 
             fileName = @"E:\Saruman\data\alize\31M_1980_09_wo_gantry.raw";
@@ -234,9 +235,9 @@ namespace CorticalExtract.Processing
             voxelFormat = ImageStack.VoxelFormat.FloatBE;
             voxDim = new float[3] { 0.9766f, 0.9766f, 0.9766f };
 
-            lms = new Point3f[] {new Point3f(406,241,399),
-                new Point3f(365,244,1062),
-                new Point3f(368,262,472)};
+            lms = new Vector3[] {new Vector3(406,241,399),
+                new Vector3(365,244,1062),
+                new Vector3(368,262,472)};
 
             stk = ImageStack.FromFile(fileName, width, height, slices, voxelFormat);
             stk.OffsetAll(-1000);

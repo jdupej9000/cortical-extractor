@@ -8,12 +8,12 @@ namespace CorticalExtract.Processing
 {
     public class Extractor
     {
-        public Extractor(ImageStack stk, Point3f lm0, Point3f lm1, Point3f lmd)
+        public Extractor(ImageStack stk, Vector3 lm0, Vector3 lm1, Vector3 lmd)
             : this(stk, lm0, lm1, lmd, new float[3] { 1, 1, 1 })
         {
         }
 
-        public Extractor(ImageStack stk, Point3f lm0, Point3f lm1, Point3f lmd, float[] voxelDim)
+        public Extractor(ImageStack stk, Vector3 lm0, Vector3 lm1, Vector3 lmd, float[] voxelDim)
         {
             this.lm0 = lm0;
             this.lm1 = lm1;
@@ -34,7 +34,7 @@ namespace CorticalExtract.Processing
         }
 
         ImageStack origStack;
-        Point3f lm0, lm1, lmd;
+        Vector3 lm0, lm1, lmd;
         Reslicer slicer;
         float maxBoneRadius;
         float priorThreshold;
@@ -46,8 +46,8 @@ namespace CorticalExtract.Processing
         float[,] thickness;
         float[,] segmentAreas;
         ImageStack caSlices;
-        Point3f[] axisPoints;
-        Point3f planeVec0, planeVec1;
+        Vector3[] axisPoints;
+        Vector3 planeVec0, planeVec1;
         string innerObj, outerObj;
 
         const float DefaultPriorThreshold = 525;
@@ -98,14 +98,14 @@ namespace CorticalExtract.Processing
             get { return thickness; }
         }
 
-        public Point3f[] Centroids
+        public Vector3[] Centroids
         {
             get { return axisPoints; }
         }
 
-        public Point3f[] PlaneVec
+        public Vector3[] PlaneVec
         {
-            get { return new Point3f[2] { planeVec0, planeVec1 }; }
+            get { return new Vector3[2] { planeVec0, planeVec1 }; }
         }
     
         public float[,] SegmentAreas
@@ -135,25 +135,25 @@ namespace CorticalExtract.Processing
             set;
         }
 
-        protected void CalcPlaneVectors(out Point3f normal, out Point3f binormal)
+        protected void CalcPlaneVectors(out Vector3 normal, out Vector3 binormal)
         {
-            Point3f u = (lm1 - lm0).Scale(voxelDimensions);
-            Point3f v = (lmd - lm0).Scale(voxelDimensions);
-            Point3f w = v - u * (Point3f.Dot(v, u) / u.LengthSq);
-            Point3f lmp = lmd - w;
+            Vector3 voxDim = new Vector3(voxelDimensions.AsSpan());
+            Vector3 u = (lm1 - lm0) * voxDim;
+            Vector3 v = (lmd - lm0) * voxDim;
+            Vector3 w = v - u * (Vector3.Dot(v, u) / u.LengthSquared());
+            Vector3 lmp = lmd - w;
 
             normal = lmd - lmp;
-            normal.UnScale(voxelDimensions);
+            normal /= voxDim;
             
-            binormal = Point3f.Cross(u, normal);
-            binormal.UnScale(voxelDimensions);
+            binormal = Vector3.Cross(u, normal);
+            binormal /= voxDim;
 
-            normal.Normalize();
-            binormal.Normalize();
-            
+            normal = Vector3.Normalize(normal);
+            binormal = Vector3.Normalize(binormal);
         }
 
-        protected void ExtractBoundaries(ImageStack stk, Point3f normal, Point3f binormal)
+        protected void ExtractBoundaries(ImageStack stk, Vector3 normal, Vector3 binormal)
         {
             int n = stk.Slices;
 
@@ -226,7 +226,7 @@ namespace CorticalExtract.Processing
 
         }
 
-        public void CalcThickness(Point3f normal, Point3f binormal, float[] voxelDim)
+        public void CalcThickness(Vector3 normal, Vector3 binormal, float[] voxelDim)
         {
             int n = innerBoundary.GetLength(0);
             thickness = new float[n, numRays];
@@ -252,21 +252,21 @@ namespace CorticalExtract.Processing
                         }
                     }
 
-                    Point3f outerWorld = outerPt.X * normal + outerPt.Y * binormal;
-                    Point3f innerWorld = innerPt.X * normal + innerPt.Y * binormal;
+                    Vector3 outerWorld = outerPt.X * normal + outerPt.Y * binormal;
+                    Vector3 innerWorld = innerPt.X * normal + innerPt.Y * binormal;
 
-                    thickness[i, j] = Point3f.DistanceAniso(outerWorld, innerWorld, voxelDim);
+                    thickness[i, j] = VectorUtils.DistanceAniso(outerWorld, innerWorld, voxelDim);
                 }
             }
         }
 
-        public void GetMesh(Point3f t0, Point3f t1, out string inner, out string outer)
+        public void GetMesh(Vector3 t0, Vector3 t1, out string inner, out string outer)
         {
             inner = BoundaryToMesh(innerBoundary, axisPoints, t0, t1, voxelDimensions);
             outer = BoundaryToMesh(outerBoundary, axisPoints, t0, t1, voxelDimensions);
         }
 
-        public void CalcSegmentAreas(Point3f t0, Point3f t1, float[] voxDim)
+        public void CalcSegmentAreas(Vector3 t0, Vector3 t1, float[] voxDim)
         {
             int k = innerBoundary.GetLength(0);
             int m = innerBoundary.GetLength(1);
@@ -301,11 +301,11 @@ namespace CorticalExtract.Processing
 
         public void Extract(float t0, float t1, int k)
         {
-            Point3f p0 = lm0 + (lm1 - lm0) * t0;
-            Point3f p1 = lm0 + (lm1 - lm0) * t1;
+            Vector3 p0 = lm0 + (lm1 - lm0) * t0;
+            Vector3 p1 = lm0 + (lm1 - lm0) * t1;
 
-            Point3f[] sliceOrigin = Utils.Seq(p0, p1, k);
-            Point3f normal, binormal;
+            Vector3[] sliceOrigin = Utils.Seq(p0, p1, k);
+            Vector3 normal, binormal;
             CalcPlaneVectors(out normal, out binormal);
             planeVec0 = normal;
             planeVec1 = binormal;
@@ -315,7 +315,7 @@ namespace CorticalExtract.Processing
             if (RefineEndpoints)
             {
                 AxisRefinementEndpoints are = new AxisRefinementEndpoints(origStack, t0, t1);
-                Point3f[] endPts = are.Process(caSlices, normal, binormal, sliceOrigin);
+                Vector3[] endPts = are.Process(caSlices, normal, binormal, sliceOrigin);
 
                 p0 = endPts[0] + (endPts[1] - endPts[0]) * t0;
                 p1 = endPts[0] + (endPts[1] - endPts[0]) * t1;
@@ -360,7 +360,7 @@ namespace CorticalExtract.Processing
             return sb.ToString();
         }
 
-        public string BoundaryToMesh(Vector2[,] bnd, Point3f[] axis, Point3f t0, Point3f t1, float[] voxDim)
+        public string BoundaryToMesh(Vector2[,] bnd, Vector3[] axis, Vector3 t0, Vector3 t1, float[] voxDim)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -371,7 +371,7 @@ namespace CorticalExtract.Processing
             {
                 for (int j = 0; j < rays; j++)
                 {
-                    Point3f pt = axis[i] + t0 * bnd[i, j].X + t1 * bnd[i, j].Y - axis[slices/2];
+                    Vector3 pt = axis[i] + t0 * bnd[i, j].X + t1 * bnd[i, j].Y - axis[slices/2];
                     sb.AppendLine(string.Format("v {0} {1} {2}",
                         pt.X * voxDim[0], pt.Y * voxDim[1], pt.Z * voxDim[2]));
                 }

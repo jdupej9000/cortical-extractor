@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CorticalExtract.DataStructures
 {
@@ -61,7 +57,7 @@ namespace CorticalExtract.DataStructures
 
         public Vector3 TransformPoint(Vector2 pt, int slice)
         {
-            int idx = Math.Min(slice, center.Length-1);
+            int idx = Math.Min(slice, center.Length - 1);
             Vector3 ret = center[idx] + (pt.X - stack.Width / 2) * t0 + (pt.Y - stack.Height / 2) * t1;
             return ret;
         }

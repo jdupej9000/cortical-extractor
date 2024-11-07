@@ -2,13 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CorticalExtract.Forms
@@ -22,7 +16,7 @@ namespace CorticalExtract.Forms
             worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
             controller = new Controller();
         }
-        
+
 
         string path = null;
         bool debugEach = false;
@@ -39,7 +33,7 @@ namespace CorticalExtract.Forms
 
         private void button2_Click(object sender, EventArgs e)
         {
-            
+
         }
 
         void OnProgress(int task, int numTasks, string comment)
@@ -64,7 +58,7 @@ namespace CorticalExtract.Forms
         }
 
         void worker_DoWork(object sender, DoWorkEventArgs e)
-        {   
+        {
             controller.ExecuteScript(path, batchItems, debugEach | debugMode, OnProgress, debugMode);
         }
 
@@ -78,14 +72,14 @@ namespace CorticalExtract.Forms
         }
 
         private void LoadBatch(string path)
-        {            
+        {
             lstItems.Items.Clear();
 
             StreamReader sr = new StreamReader(new FileStream(path, FileMode.Open, FileAccess.Read));
             while (!sr.EndOfStream)
             {
                 string line = sr.ReadLine();
-                ExtractorSetup es = new ExtractorSetup(line);                
+                ExtractorSetup es = new ExtractorSetup(line);
                 ListViewItem lvi = lstItems.Items.Add(es.pathRaw);
                 lvi.SubItems.Add(es.width.ToString());
                 lvi.SubItems.Add(es.height.ToString());
@@ -108,9 +102,9 @@ namespace CorticalExtract.Forms
 
             prbProgress.Visible = true;
             prbProgress.Minimum = 0;
-            prbProgress.Maximum = batchItems.Count+1;
+            prbProgress.Maximum = batchItems.Count + 1;
             prbProgress.Value = 0;
-            
+
             worker.RunWorkerAsync();
         }
 
@@ -119,7 +113,7 @@ namespace CorticalExtract.Forms
             propExtract.SelectedObject = controller.Config;
             prbProgress.Visible = false;
 
-            lstItems.View = View.Details;            
+            lstItems.View = View.Details;
         }
 
         private void btnLoadBatch_Click(object sender, EventArgs e)
@@ -129,7 +123,7 @@ namespace CorticalExtract.Forms
             if (dlg.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
             path = dlg.FileName;
             LoadBatch(dlg.FileName);
-            sblStatus.Text = "Loaded batch file " + Path.GetFileName(path);            
+            sblStatus.Text = "Loaded batch file " + Path.GetFileName(path);
         }
 
         private void btnEngage_Click(object sender, EventArgs e)

@@ -107,7 +107,7 @@ namespace CorticalExtract.Processing
         {
             get { return new Vector3[2] { planeVec0, planeVec1 }; }
         }
-    
+
         public float[,] SegmentAreas
         {
             get { return segmentAreas; }
@@ -145,7 +145,7 @@ namespace CorticalExtract.Processing
 
             normal = lmd - lmp;
             normal /= voxDim;
-            
+
             binormal = Vector3.Cross(u, normal);
             binormal /= voxDim;
 
@@ -162,7 +162,7 @@ namespace CorticalExtract.Processing
             Vector2 center = new Vector2((float)stk.Width / 2, (float)stk.Height / 2);
 
             //Parallel.For(0, n, (i) =>
-            for(int i = 0; i < n; i++)
+            for (int i = 0; i < n; i++)
             {
                 BoundarySegmentation seg = new BoundarySegmentation(stk, i, maxBoneRadius);
 
@@ -213,7 +213,7 @@ namespace CorticalExtract.Processing
                     else radiusOuterImp[j] = radiusOuter[j];
                 }
 
-                for(int j = 0; j < numRays; j++)
+                for (int j = 0; j < numRays; j++)
                 {
                     float theta = (float)(2.0 * Math.PI / (float)numRays * j);
                     Vector2 direction = new Vector2((float)(Math.Cos(theta)), (float)(Math.Sin(theta)));
@@ -371,7 +371,7 @@ namespace CorticalExtract.Processing
             {
                 for (int j = 0; j < rays; j++)
                 {
-                    Vector3 pt = axis[i] + t0 * bnd[i, j].X + t1 * bnd[i, j].Y - axis[slices/2];
+                    Vector3 pt = axis[i] + t0 * bnd[i, j].X + t1 * bnd[i, j].Y - axis[slices / 2];
                     sb.AppendLine(string.Format("v {0} {1} {2}",
                         pt.X * voxDim[0], pt.Y * voxDim[1], pt.Z * voxDim[2]));
                 }
@@ -379,7 +379,7 @@ namespace CorticalExtract.Processing
 
             for (int i = 0; i < slices - 1; i++)
             {
-                for(int j = 0; j < rays; j++)
+                for (int j = 0; j < rays; j++)
                 {
                     int j1 = j + 1;
                     if (j1 >= rays) j1 = 0;

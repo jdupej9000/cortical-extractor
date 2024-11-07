@@ -1,9 +1,6 @@
 ﻿using CorticalExtract.DataStructures;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CorticalExtract.Processing
 {
@@ -64,7 +61,7 @@ namespace CorticalExtract.Processing
 
                     for (byte k = 0; k < numThr; k++)
                     {
-                        float v = stk[i,j,slice];
+                        float v = stk[i, j, slice];
                         if (thr[k].IsWithin(v))
                         {
                             ret[idx] = codes[k];

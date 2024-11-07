@@ -1,9 +1,5 @@
 ﻿using CorticalExtract.DataStructures;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CorticalExtract.Processing
@@ -21,7 +17,7 @@ namespace CorticalExtract.Processing
         {
             int n = center.Length;
 
-            ImageStack ret = new ImageStack(2 * radius + 1, 2 * radius + 1, n, 
+            ImageStack ret = new ImageStack(2 * radius + 1, 2 * radius + 1, n,
                 new float[3] { 1, 1, 1 });
 
             Parallel.For(0, n, (i) =>
@@ -35,7 +31,7 @@ namespace CorticalExtract.Processing
                     }
                 }
             });
-            
+
             return ret;
         }
     }

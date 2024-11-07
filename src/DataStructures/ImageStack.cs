@@ -23,8 +23,8 @@ namespace CorticalExtract.DataStructures
             return FromFile(path, width, height, slices, fmt, new float[3] { 1, 1, 1 });
         }
 
-        public static ImageStack FromFile(string path, int width, int height, int slices, VoxelFormat fmt, float[] voxDim, int[] sliceSelect=null)
-        {   
+        public static ImageStack FromFile(string path, int width, int height, int slices, VoxelFormat fmt, float[] voxDim, int[] sliceSelect = null)
+        {
             int[] sel = null;
 
             if (sliceSelect == null)
@@ -36,7 +36,7 @@ namespace CorticalExtract.DataStructures
             {
                 sel = sliceSelect;
             }
-            
+
             ImageStack ret = new ImageStack(height, width, sel.Length, voxDim);
 
             try
@@ -126,8 +126,8 @@ namespace CorticalExtract.DataStructures
 
         public float this[int x, int y, int z]
         {
-            get { return data[Utils.Clamp(z, 0, slices-1)][Idx(x, y)]; }
-            set { data[Utils.Clamp(z, 0, slices-1)][Idx(x, y)] = value; }
+            get { return data[Utils.Clamp(z, 0, slices - 1)][Idx(x, y)]; }
+            set { data[Utils.Clamp(z, 0, slices - 1)][Idx(x, y)] = value; }
         }
 
         public float Sample(Vector3 p)
@@ -165,10 +165,10 @@ namespace CorticalExtract.DataStructures
         public float SampleSlice(float x, float y, int z)
         {
             float rx = x / voxDim[0];
-            float ry = y / voxDim[1];            
+            float ry = y / voxDim[1];
 
             int ix = (int)Math.Floor(rx);
-            int iy = (int)Math.Floor(ry);            
+            int iy = (int)Math.Floor(ry);
 
             rx -= ix;
             ry -= iy;
@@ -177,7 +177,7 @@ namespace CorticalExtract.DataStructures
             float a1 = Utils.Blend(this[ix, iy + 1, z], this[ix + 1, iy + 1, z], rx);
 
             float a = Utils.Blend(a0, a1, ry);
-            
+
             return a;
         }
 

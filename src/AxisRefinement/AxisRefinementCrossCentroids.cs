@@ -1,11 +1,7 @@
 ﻿using CorticalExtract.DataStructures;
 using CorticalExtract.Processing;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CorticalExtract.AxisRefinement
 {
@@ -13,10 +9,10 @@ namespace CorticalExtract.AxisRefinement
     {
         public AxisRefinementCrossCentroids()
             : this(new PassthroughPathSmoothing())
-        {            
+        {
         }
 
-        public AxisRefinementCrossCentroids(IPathSmooting smoothing, bool naive=false)
+        public AxisRefinementCrossCentroids(IPathSmooting smoothing, bool naive = false)
         {
             NaiveCentering = naive;
             Tolerance = 0.1f;
@@ -53,8 +49,8 @@ namespace CorticalExtract.AxisRefinement
             for (int j = -radius; j < radius + 1; j++)
             {
                 for (int i = -radius; i < radius + 1; i++)
-                {                    
-                    if(stk.SampleSlice(center.X + i, center.Y + j, slice) > thresh)
+                {
+                    if (stk.SampleSlice(center.X + i, center.Y + j, slice) > thresh)
                     {
                         accumX += i;
                         accumY += j;
@@ -69,17 +65,17 @@ namespace CorticalExtract.AxisRefinement
                 return new Vector2(0, 0);
         }
 
-        public Vector2 FindSliceCentroidNaive(ImageStack stk, int slice, int maxRadius, float thresh=500)
+        public Vector2 FindSliceCentroidNaive(ImageStack stk, int slice, int maxRadius, float thresh = 500)
         {
-            return FindSliceCentroidNaiveInternal(stk, slice, new Vector2(stk.Width/2, stk.Height/2), maxRadius, thresh);
+            return FindSliceCentroidNaiveInternal(stk, slice, new Vector2(stk.Width / 2, stk.Height / 2), maxRadius, thresh);
         }
 
-        public Vector2 FindSliceCentroidIterative(ImageStack stk, int slice, int maxRadius, float thresh = 500, float tol=0.1f, int maxIt = 10)
+        public Vector2 FindSliceCentroidIterative(ImageStack stk, int slice, int maxRadius, float thresh = 500, float tol = 0.1f, int maxIt = 10)
         {
             Vector2 center = new Vector2(stk.Width / 2, stk.Height / 2);
             Vector2 x0 = center;
             int it = 0;
-            
+
             while (it < maxIt)
             {
                 Vector2 dx = FindSliceCentroidNaiveInternal(stk, slice, x0, maxRadius, thresh);
@@ -111,7 +107,7 @@ namespace CorticalExtract.AxisRefinement
             int n = origins.Length;
             Vector3[] ret = new Vector3[n];
 
-            for(int i = 0; i < n; i++)
+            for (int i = 0; i < n; i++)
             {
                 Vector2 sliceCenter = NaiveCentering ?
                     FindSliceCentroidNaive(stk, i, 40) :
@@ -121,7 +117,7 @@ namespace CorticalExtract.AxisRefinement
                 ret[i] = refined;
             }
 
-            return smoothing.Process(ret);            
+            return smoothing.Process(ret);
         }
     }
 }

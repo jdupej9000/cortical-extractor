@@ -1,9 +1,4 @@
 ﻿using CorticalExtract.DataStructures;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CorticalExtract.Processing
 {
@@ -29,7 +24,7 @@ namespace CorticalExtract.Processing
             ParseFloat(parts[12], 0, out min1);
             ParseFloat(parts[13], 0, out max1);
             ParseFloat(parts[14], 0, out min2);
-            ParseFloat(parts[15], 0, out max2);            
+            ParseFloat(parts[15], 0, out max2);
         }
 
         public string pathRaw;

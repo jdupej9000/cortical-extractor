@@ -1,10 +1,6 @@
 ﻿using CorticalExtract.DataStructures;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CorticalExtract.Processing
 {
@@ -88,7 +84,7 @@ namespace CorticalExtract.Processing
         {
             mask[x + y * width] = v;
         }
-                
+
         private int FindSegments(SegmentRule sr)
         {
             byte segmentIdx = 1;
@@ -97,11 +93,11 @@ namespace CorticalExtract.Processing
             {
                 for (int i = 0; i < width; i++)
                 {
-                    if (GetMask(i, j) == 0 & 
+                    if (GetMask(i, j) == 0 &
                         sr(stack, i, j, activeSlice))
-                    {                        
-                        if(FloodFill(i, j, segmentIdx, sr))
-                            segmentIdx++;                        
+                    {
+                        if (FloodFill(i, j, segmentIdx, sr))
+                            segmentIdx++;
                     }
                 }
             }
@@ -112,7 +108,7 @@ namespace CorticalExtract.Processing
         private bool FloodFill(int x, int y, byte id, SegmentRule sr)
         {
             Stack<Pair> lifo = new Stack<Pair>();
-            lifo.Push(new Pair(x,y));
+            lifo.Push(new Pair(x, y));
 
             bool goodSegment = false;
 
@@ -132,7 +128,7 @@ namespace CorticalExtract.Processing
                 lifo.Push(new Pair(x1 + 1, y1));
                 lifo.Push(new Pair(x1, y1 - 1));
                 lifo.Push(new Pair(x1, y1 + 1));
-                
+
             }
 
             return goodSegment;
@@ -141,10 +137,10 @@ namespace CorticalExtract.Processing
         private byte GetLargestIndex(bool ignoreZero)
         {
             int[] hist = new int[256];
-            
+
             for (int i = 0; i < 256; i++) hist[i] = 0;
 
-            for (int i = 0; i < height * width; i++)            
+            for (int i = 0; i < height * width; i++)
                 hist[mask[i]]++;
 
             byte bestIdx = 0;
@@ -156,10 +152,10 @@ namespace CorticalExtract.Processing
                 startIdx = 1;
             }
 
-            for (byte i = startIdx; i < 255; i++)            
+            for (byte i = startIdx; i < 255; i++)
                 if (hist[bestIdx] < hist[i])
                     bestIdx = i;
-            
+
             return bestIdx;
         }
 
@@ -172,7 +168,7 @@ namespace CorticalExtract.Processing
             {
                 for (int i = 0; i < width; i++)
                 {
-                    if (GetMask(i,j) == idx)
+                    if (GetMask(i, j) == idx)
                     {
                         x += i;
                         y += j;

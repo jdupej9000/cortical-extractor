@@ -1,5 +1,4 @@
-﻿using CorticalExtract.DataStructures;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
@@ -198,7 +197,7 @@ namespace CorticalExtract.Processing
             median = a[pp++];
             nLeft = nRight = 1;
 
-            for (;;)
+            for (; ; )
             {
                 // get next value
                 float val = a[pp++];

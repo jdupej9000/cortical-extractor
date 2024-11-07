@@ -1,11 +1,5 @@
-﻿using CorticalExtract.DataStructures;
-using CorticalExtract.Processing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using CorticalExtract.Processing;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CorticalExtract.AxisRefinement
 {
@@ -17,12 +11,9 @@ namespace CorticalExtract.AxisRefinement
 
         public static float[] LineParams(Vector3[] y, float[] x)
         {
-            float ax, bx, ay, by, az, bz;
-            int n = y.Length;
-
-            Utils.OlsFit(x, Utils.ExtractCoordinate(y, 0), out ax, out bx);
-            Utils.OlsFit(x, Utils.ExtractCoordinate(y, 1), out ay, out by);
-            Utils.OlsFit(x, Utils.ExtractCoordinate(y, 2), out az, out bz);
+            Utils.OlsFit(x, Utils.ExtractCoordinate(y, 0), out float ax, out float bx);
+            Utils.OlsFit(x, Utils.ExtractCoordinate(y, 1), out float ay, out float by);
+            Utils.OlsFit(x, Utils.ExtractCoordinate(y, 2), out float az, out float bz);
 
             return new float[6] { ax, bx, ay, by, az, bz };
         }
@@ -30,7 +21,7 @@ namespace CorticalExtract.AxisRefinement
         public Vector3[] Process(Vector3[] y)
         {
             int n = y.Length;
-            float[] x = Utils.Seq(0, n-1, n);
+            float[] x = Utils.Seq(0, n - 1, n);
             float[] p = LineParams(y, x);
 
             Vector3[] ret = new Vector3[n];

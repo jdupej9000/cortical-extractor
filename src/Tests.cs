@@ -2,17 +2,13 @@
 using CorticalExtract.Processing;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 
 
 namespace CorticalExtract
-{   
+{
     [TestFixture]
     public class SingleExtractionTests
     {
@@ -24,7 +20,7 @@ namespace CorticalExtract
             height = 512;
             slices = 1098;
             voxelFormat = ImageStack.VoxelFormat.FloatBE;
-            voxDim = new float[3] {1,1,1};            
+            voxDim = new float[3] { 1, 1, 1 };
 
             lms = new Vector3[] {new Vector3(129,264,408),
                 new Vector3(166,220,1061),
@@ -59,7 +55,7 @@ namespace CorticalExtract
                     for (int i = 0; i < width; i++)
                     {
                         float v = stk[i, j, k];
-                        if(v < -1000 | v > 3096)
+                        if (v < -1000 | v > 3096)
                             Assert.Fail(string.Format("Invalid HU value. I({0},{1},{2})=({3})", i, j, k, v));
                     }
                 }

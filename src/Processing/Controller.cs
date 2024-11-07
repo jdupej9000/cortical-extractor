@@ -4,10 +4,8 @@ using CorticalExtract.Forms;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Numerics;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CorticalExtract.Processing
@@ -122,18 +120,18 @@ namespace CorticalExtract.Processing
         }
 
         public void ExecuteScript(string fileName, List<ExtractorSetup> tasks, bool debugEach, ProgressDelegate prog, bool debugMode = false)
-        {        
+        {
             string path = Path.GetDirectoryName(fileName);
             string destPath = Path.Combine(path, Config.ResultPath);
             Directory.CreateDirectory(destPath);
 
             int numTasks = tasks.Count;
 
-            for (int i = 0; i < numTasks; i++)            
+            for (int i = 0; i < numTasks; i++)
             {
                 ExtractorSetup setup = tasks[i];
 
-                prog(i+1, numTasks, string.Format("Loading {0}.", Path.GetFileName(setup.pathRaw)));
+                prog(i + 1, numTasks, string.Format("Loading {0}.", Path.GetFileName(setup.pathRaw)));
                 ImageStack stk = ImageStack.FromFile(Path.Combine(path, setup.pathRaw),
                     setup.width, setup.height, setup.slices, setup.format);
 
@@ -141,7 +139,7 @@ namespace CorticalExtract.Processing
                 stk.OffsetAll(setup.offset);
 
                 prog(i + 1, numTasks, "Filtering.");
-                if(cfg.MedianFilterRadius > 0)
+                if (cfg.MedianFilterRadius > 0)
                     stk = Filtering.MedianFilter(stk, cfg.MedianFilterRadius);
 
                 prog(i + 1, numTasks, "Extracting CA profile.");

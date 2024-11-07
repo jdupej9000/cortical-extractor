@@ -1,13 +1,7 @@
 ﻿using CorticalExtract.Processing;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CorticalExtract.Forms
@@ -17,7 +11,7 @@ namespace CorticalExtract.Forms
         public ClassificationBatchForm()
         {
             InitializeComponent();
-            controller = new Controller();            
+            controller = new Controller();
             worker.DoWork += worker_DoWork;
         }
 
@@ -67,12 +61,12 @@ namespace CorticalExtract.Forms
         }
 
         void worker_DoWork(object sender, DoWorkEventArgs e)
-        {            
+        {
             controller.ExecuteClassificationScript(path, pathDest, debugEach, OnProgress);
         }
 
         private void button2_Click(object sender, EventArgs e)
-        {            
+        {
             debugEach = chkDebugEach.Checked;
             worker.RunWorkerAsync();
         }

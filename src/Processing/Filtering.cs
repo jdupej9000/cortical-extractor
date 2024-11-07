@@ -12,7 +12,7 @@ namespace CorticalExtract.Processing
                     int m = 2 * radius + 1;
                     m = m * m * m;
                     float[] arr = new float[m];
-                    m=0;
+                    m = 0;
 
                     for (int x = -radius; x <= radius; x++)
                         for (int y = -radius; y <= radius; y++)
@@ -32,7 +32,7 @@ namespace CorticalExtract.Processing
                         filt = arr[m2];
                     }
 
-                    return filt;                    
+                    return filt;
                 });
 
             return ret;

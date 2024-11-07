@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using CorticalExtract.DataStructures;
+using System;
 using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using CorticalExtract.DataStructures;
 using System.Drawing.Imaging;
 using System.Numerics;
+using System.Windows.Forms;
 
 namespace CorticalExtract.Forms
 {
@@ -54,7 +48,7 @@ namespace CorticalExtract.Forms
 
         public class ApdParams : EventArgs
         {
-            public ApdParams()                
+            public ApdParams()
             {
                 scale = 1;
                 g = null;
@@ -153,10 +147,10 @@ namespace CorticalExtract.Forms
 
                 case 3:
                     factors[0] = 0; factors[1] = 0; factors[2] = 255;
-                    break;                
-            }            
+                    break;
+            }
         }
-        
+
 
         void picView_Paint(object sender, PaintEventArgs e)
         {
@@ -189,7 +183,7 @@ namespace CorticalExtract.Forms
 
                         for (int x = 0; x < bmd.Width; x++)
                         {
-                            float v = Math.Min(255.0f, Math.Max(0, 255.0f * (stack[x, y, slice]-min) / (max-min)));
+                            float v = Math.Min(255.0f, Math.Max(0, 255.0f * (stack[x, y, slice] - min) / (max - min)));
                             byte b = (byte)v;
 
                             MaskToColor(mask, maskIdx, channelFactor);
@@ -216,7 +210,7 @@ namespace CorticalExtract.Forms
                 Pen penLm = new Pen(Color.Red);
                 Brush brushLm = new SolidBrush(Color.Red);
 
-                if(lmAset)
+                if (lmAset)
                 {
                     e.Graphics.DrawLine(penLm, lmA.X * scale - 2, lmA.Y * scale, lmA.X * scale + 2, lmA.Y * scale);
                     e.Graphics.DrawLine(penLm, lmA.X * scale, lmA.Y * scale - 1, lmA.X * scale, lmA.Y * scale + 2);
@@ -229,7 +223,7 @@ namespace CorticalExtract.Forms
                     e.Graphics.DrawLine(penLm, lmB.X * scale, lmB.Y * scale - 1, lmB.X * scale, lmB.Y * scale + 2);
                     e.Graphics.DrawString(string.Format("B {0}", lmB.Z), Font, brushLm, lmB.X * scale + 2, lmB.Y * scale + 2);
                 }
-                
+
             }
         }
 
@@ -247,7 +241,7 @@ namespace CorticalExtract.Forms
             if (!float.TryParse(txtScale.Text, out scale)) return;
             if (!int.TryParse(toolStripTextBox1.Text, out slice)) return;
 
-            if (tsbLmA.Checked)            
+            if (tsbLmA.Checked)
                 lmA = new Vector3((float)e.X / scale, (float)e.Y / scale, slice);
             else if (tsbLmB.Checked)
                 lmB = new Vector3((float)e.X / scale, (float)e.Y / scale, slice);
@@ -278,7 +272,7 @@ namespace CorticalExtract.Forms
 
         private void picView_Click(object sender, EventArgs e)
         {
-            
+
         }
     }
 }

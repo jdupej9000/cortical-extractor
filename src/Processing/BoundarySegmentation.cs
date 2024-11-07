@@ -1,10 +1,6 @@
 ﻿using CorticalExtract.DataStructures;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CorticalExtract.Processing
 {
@@ -69,7 +65,7 @@ namespace CorticalExtract.Processing
             set { halfMaxRadius = value; }
         }
 
-        public bool VerifyRise(Vector2 origin, Vector2 direction, float t0, float thresh, float minRun=3.0f)
+        public bool VerifyRise(Vector2 origin, Vector2 direction, float t0, float thresh, float minRun = 3.0f)
         {
             float t = 0;
 

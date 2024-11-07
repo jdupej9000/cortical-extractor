@@ -1,12 +1,7 @@
 ﻿using CorticalExtract.DataStructures;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CorticalExtract.Forms
@@ -15,9 +10,9 @@ namespace CorticalExtract.Forms
     {
         public DebugForm()
         {
-            InitializeComponent();            
+            InitializeComponent();
         }
-                
+
         public List<StackViewItem> Items = new List<StackViewItem>();
         StackViewItem activeItem = null;
         string stackInfo = string.Empty;
@@ -75,7 +70,7 @@ namespace CorticalExtract.Forms
             g.DrawLine(green, new PointF(width / 2, height / 2 - 4), new PointF(width / 2, height / 2 + 4));
             g.DrawLine(green, new PointF(width / 2 - 4, height / 2), new PointF(width / 2 + 4, height / 2));
 
-            if (activeItem.inner != null )
+            if (activeItem.inner != null)
             {
                 if (activeItem.inner.GetUpperBound(0) >= e.slice)
                 {
@@ -86,7 +81,7 @@ namespace CorticalExtract.Forms
                 }
             }
 
-            if (activeItem.outer != null )
+            if (activeItem.outer != null)
             {
                 if (activeItem.outer.GetUpperBound(0) >= e.slice)
                 {
@@ -95,7 +90,7 @@ namespace CorticalExtract.Forms
                     for (int i = 0; i < n - 1; i++)
                         g.DrawLine(i % 2 == 1 ? green : greenOdd, activeItem.outer[e.slice, i].ToPointF(sc) + center, activeItem.outer[e.slice, i + 1].ToPointF(sc) + center);
                     g.DrawLine(green, activeItem.outer[e.slice, n - 1].ToPointF(sc) + center, activeItem.outer[e.slice, 0].ToPointF(sc) + center);
-                                        
+
                 }
             }
         }
@@ -105,7 +100,7 @@ namespace CorticalExtract.Forms
             int idx = lstVis.SelectedIndex;
             if (idx < 0) return;
 
-            activeItem = Items[idx];         
+            activeItem = Items[idx];
             UpdateView();
         }
     }

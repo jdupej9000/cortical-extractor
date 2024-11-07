@@ -1,11 +1,6 @@
 ﻿using CorticalExtract.DataStructures;
 using CorticalExtract.Processing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CorticalExtract.AxisRefinement
 {

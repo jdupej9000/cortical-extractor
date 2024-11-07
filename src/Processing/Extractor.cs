@@ -174,8 +174,8 @@ namespace CorticalExtract.Processing
 
                 for (int j = 0; j < numRays; j++)
                 {
-                    float theta = (float)(2.0 * Math.PI / (float)numRays * j);
-                    Vector2 direction = new Vector2((float)(Math.Cos(theta)), (float)(Math.Sin(theta)));
+                    float theta = 2.0f * MathF.PI / (float)numRays * j;
+                    Vector2 direction = new Vector2(MathF.Cos(theta), MathF.Sin(theta));
 
                     RayMarchResult t0, t1, t2;
 
@@ -215,8 +215,8 @@ namespace CorticalExtract.Processing
 
                 for (int j = 0; j < numRays; j++)
                 {
-                    float theta = (float)(2.0 * Math.PI / (float)numRays * j);
-                    Vector2 direction = new Vector2((float)(Math.Cos(theta)), (float)(Math.Sin(theta)));
+                    float theta = 2.0f * MathF.PI / (float)numRays * j;
+                    Vector2 direction = new Vector2(MathF.Cos(theta), MathF.Sin(theta));
 
                     innerBoundary[i, j] = radiusInnerImp[j] * direction;
                     outerBoundary[i, j] = radiusOuterImp[j] * direction;
@@ -236,7 +236,7 @@ namespace CorticalExtract.Processing
                 for (int j = 0; j < numRays; j++)
                 {
                     Vector2 outerPt = outerBoundary[i, j];
-                    Vector2 innerPt = new Vector2(0, 0);
+                    Vector2 innerPt = Vector2.Zero;
                     float bestDist = float.MaxValue;
 
                     for (int k = 0; k < numRays; k++)

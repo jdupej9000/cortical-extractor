@@ -183,7 +183,7 @@ namespace CorticalExtract.Forms
 
                         for (int x = 0; x < bmd.Width; x++)
                         {
-                            float v = Math.Min(255.0f, Math.Max(0, 255.0f * (stack[x, y, slice] - min) / (max - min)));
+                            float v = MathF.Min(255.0f, MathF.Max(0, 255.0f * (stack[x, y, slice] - min) / (max - min)));
                             byte b = (byte)v;
 
                             MaskToColor(mask, maskIdx, channelFactor);

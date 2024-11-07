@@ -141,9 +141,9 @@ namespace CorticalExtract.DataStructures
             float ry = y / voxDim[1];
             float rz = z / voxDim[2];
 
-            int ix = (int)Math.Floor(rx);
-            int iy = (int)Math.Floor(ry);
-            int iz = (int)Math.Floor(rz);
+            int ix = (int)MathF.Floor(rx);
+            int iy = (int)MathF.Floor(ry);
+            int iz = (int)MathF.Floor(rz);
 
             rx -= ix;
             ry -= iy;
@@ -167,8 +167,8 @@ namespace CorticalExtract.DataStructures
             float rx = x / voxDim[0];
             float ry = y / voxDim[1];
 
-            int ix = (int)Math.Floor(rx);
-            int iy = (int)Math.Floor(ry);
+            int ix = (int)MathF.Floor(rx);
+            int iy = (int)MathF.Floor(ry);
 
             rx -= ix;
             ry -= iy;

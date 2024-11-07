@@ -91,8 +91,8 @@ namespace CorticalExtract.Processing
             }
 
             rxy /= n;
-            sx = (float)Math.Sqrt(sx / n);
-            sy = (float)Math.Sqrt(sy / n);
+            sx = (float)MathF.Sqrt(sx / n);
+            sy = (float)MathF.Sqrt(sy / n);
             rxy /= sx * sy;
 
             b = rxy * sy / sx;

@@ -1,0 +1,138 @@
+\documentclass[11pt,twoside,a4paper,titlepage]{report}
+\usepackage[a4paper, portrait, margin=1in]{geometry}
+
+\newcommand{\valref}[3]{
+	\begin{table}[h!]
+	\begin{tabular}{l l}
+		\textbf{Symbol} & #1\\
+		\textbf{Valid range} & #2\\
+		\textbf{Default} & #3
+	\end{tabular}
+	\end{table} 
+}
+
+\begin{document}
+\title{CEXT documentation}
+\author{J\'{a}n Dupej}
+\date{October 16, 2017}
+
+\maketitle
+\tableofcontents
+
+\chapter{Introduction}
+This tutorial details the operation of CEXT, the cortical area extractor.
+The underlying algorithm has been discussed in \cite{dupej2017}.
+
+\chapter{Reference}
+
+\section{Menu}
+\subsection{Load batch...}
+\subsection{Engage!}
+\subsection{Debug selected}
+
+\section{Settings}
+Please refer to XXX for specifics on notation.
+\subsection{AxisDetection}
+This settings specifies the method of identifying the medial axis.
+\paragraph{Landmarks} 
+Given the landmarks \(\mathbf{p}_0, \mathbf{p}_1\), the medial axis is specified as the straight line between them.
+\begin{equation}
+\mathbf{a}_i = \mathbf{p}_0 + \big(\mathbf{p}_1 - \mathbf{p}_0\big) \bigg(r_0 + \frac{(i-1)(r_1 - r_0)}{n-1}\bigg);  i=1,..n 
+\label{equ:axsDetLandm}
+\end{equation}
+
+\paragraph{CrossSectionCentroids}
+This setting forces the initial detection of medial axis as in Eq.\ref{equ:axsDetLandm}.
+However, these axis points are then refined as follows.
+A plane perpendicular to the landmark-defined medial axis is constructed in each \(\mathbf{a}_i\) from the previous step.
+Rough segmentation of cortical area is performed by thresholding against \(h_{prior}\), in each reslice.
+Continuous elements of the segmented cortical area are determined and all but the largest one (by pixel count) are discarded.
+The centroid of the remaining cortical area in the reslice is calculated and stored as \(\mathbf{a}_i\).
+
+\paragraph{CrossSectionLinear}
+Cross-section centroids are identified as with the setting \emph{CrossSectionCentroids}.
+To these centroids, a straight line \(A: \mathbf{c} + t\mathbf{d}, t\in\mathbf{R}\) is fitted with ordinary least squares.
+Points \(\mathbf{c}_0, \mathbf{c}_1 \in A\) are found, such that the slice numbers of these match the slice numbers corresponding to the start and end of medial axis ROI.
+The medial axis \(\mathbf{a}_i, i=1,..n\) is then constructed by equidistantly placing points on the straight line between \(\mathbf{c}_0\) and \(\mathbf{c}_1\).
+
+\paragraph{CrossSectionGaussian}
+This is the default setting.
+A preliminary axis \(\tilde{\mathbf{a}}_i\) is constructed the same as in \emph{CrossSectionCentroids}.
+The final medial axis is established by convolving with a Gaussian kernel \(\mathbf{a} = \tilde{\mathbf{a}} \ast k\), where
+\begin{equation}
+k(x) = exp\bigg(-\frac{x^2}{2\sigma_a^2}\bigg)
+\label{equ:axsDetGauss}
+\end{equation}
+This setting is recommended for most applications.
+The medial axis is represented as a general polyline; however, the high-frequency information that can be caused by noise is suppressed.
+The width of the kernel \(\sigma_a\), is configured in another field.
+
+
+\subsection{AxisGaussianBandwidth}
+\valref{\(\sigma_a\)}{\(\langle 0, \infty )\)}{3}
+This parameter is applicable only when axis detection is set to \emph{CrossSectionGaussian}; with other settings, it is ignored.
+It controls the bandwidth of the Gaussian kernel that is used to smoothen the general medial axis.
+This value is not given in any length units, but in indices of the medial axis samples.
+Larger values will result in a smoother axis, very large values will restrict the responsiveness of the medial axis shape to the shape of the bone.
+Low values will cause the medial axis to better follow the shape of the bone; however very low values may not suppress the effect of noise in the data.
+
+\subsection{BoneRoiStart}
+\valref{\(r_0\)}{\(\langle 0, 1 \rangle\)}{0.2}
+This value specifies the location along the length of the bone, where reslicing starts.
+
+\subsection{BoneRoiEnd}
+\valref{\(r_1\)}{\(\langle 0, 1 \rangle\)}{0.8}
+This value specifies the location along the length of the bone, where reslicing ends.
+
+\subsection{DebugAll}
+Speciefies, if the result of each extraction is shown for diagnostic purposes.
+Note that is this is set to \emph{True}, a debugging window will be shown after each extraction and the program proceeds with the next file only after the user closes the debug window.
+The result files are generated, regardless how this field is set.
+
+\subsection{MaxBoneRadius}
+\valref{}{}{}
+
+\subsection{MedianFilterRadius}
+\valref{\(k_{median}\)}{\(\langle 0, 16 \rangle\)}{0}
+This value configures the size of the median filter applied to the entire stack before extraction.
+Note that the median filtering is performed in 3D.
+Higher values will result insmother images, at considerable computational expense.
+If set to 0, no filtering is done.
+
+\subsection{NumRays}
+\valref{\(n_{ray}\)}{\(\langle 1, 10000\rangle\)}{50}
+Sets the number of angle-regular directions along which the cortical boundaries will be sampled.
+This is also equal to the number of columns of the cortical thickness matrix that results from the extraction.
+
+\subsection{NumSlices}
+\valref{\(n_{slice}\)}{\(\langle 1, 10000\rangle\)}{100}
+Sets the number of cross-section reslices that will be produced in the extraction process.
+This is also equal to the number of rows of the cortical thickness matrix that results from the extraction.
+
+\subsection{PriorThreshold}
+\valref{\(h_{prior}\)}{\(\langle -1000, 3092\rangle\)}{525}
+This is the prior threshold separating bone from soft tissues and is given in Hounsfield units. 
+This value is used in rough segmentation of cortical area, and in some parts of the extraction, may be automatically refined.
+
+\subsection{RefineEndpoints}
+If this is set to \emph{True}, endpoint refinement, as detailed in \cite{dupej2017} will be applied.
+It is recommended to enable this only when significant error in endpoint landmarks is expected.
+The default value is \emph{False}.
+
+\subsection{ResultPath}
+The absolute path, where the resulting files will be saved.
+It is not necessary to include the training backslash.
+
+\subsection{UseHmh}
+If set to \emph{True}, half-maximum-height adaptive thresholding \cite{spoor1993} will be used.
+This will result in sub-pixel resolution in the detection of outer and inner cortical boundaries.
+This method is described in more detail in \cite{dupej2017}.
+If set to \emph{False}, ordinary thresholding will be used.
+The default is \emph{True} and it is recommended to keep this setting.
+
+\section{Batch file format}
+
+\bibliographystyle{plain}
+\bibliography{refs}
+
+\end{document}

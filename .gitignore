@@ -34,3 +34,4 @@
 *.user
 [Bb]in/
 [Oo]bj/
+.vs/

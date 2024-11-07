@@ -1,31 +1,24 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26127.0
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CorticalExtract", "CorticalExtract.csproj", "{59C6C1A6-7B02-4D51-BFA7-FB4BD213D257}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{C289F74E-AD62-4DD8-B730-396D160D7C5E}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\packages.config = .nuget\packages.config
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CorticalExtract", "CorticalExtract.csproj", "{59C6C1A6-7B02-4D51-BFA7-FB4BD213D257}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
-		Debug|x64 = Debug|x64
 		Release|Any CPU = Release|Any CPU
-		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{59C6C1A6-7B02-4D51-BFA7-FB4BD213D257}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{59C6C1A6-7B02-4D51-BFA7-FB4BD213D257}.Debug|x64.ActiveCfg = Debug|x64
-		{59C6C1A6-7B02-4D51-BFA7-FB4BD213D257}.Debug|x64.Build.0 = Debug|x64
+		{59C6C1A6-7B02-4D51-BFA7-FB4BD213D257}.Debug|Any CPU.Build.0 = Debug|x64
 		{59C6C1A6-7B02-4D51-BFA7-FB4BD213D257}.Release|Any CPU.ActiveCfg = Release|x64
-		{59C6C1A6-7B02-4D51-BFA7-FB4BD213D257}.Release|x64.ActiveCfg = Release|x64
-		{59C6C1A6-7B02-4D51-BFA7-FB4BD213D257}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {30D2D6B6-27DF-490D-9C3B-450D6A33C327}
 	EndGlobalSection
 EndGlobal

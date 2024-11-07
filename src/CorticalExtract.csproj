@@ -51,6 +51,5 @@
  
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="NUnit" Version="4.2.2" />
   </ItemGroup>
 </Project>

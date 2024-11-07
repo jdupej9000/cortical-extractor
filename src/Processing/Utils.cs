@@ -187,7 +187,9 @@ namespace CorticalExtract.Processing
 
         public static float FastMedian27(float[] a)
         {
-            float[] left = new float[14], right = new float[14];
+            Span<float> left = stackalloc float[14];
+            Span<float> right = stackalloc float[14];
+            //float[] left = new float[14], right = new float[14];
             float median;
             int nLeft, nRight;
             int pa = 0, pp;

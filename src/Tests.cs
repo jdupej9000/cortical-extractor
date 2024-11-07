@@ -59,7 +59,7 @@ namespace CorticalExtract
                     {
                         float v = stk[i, j, k];
                         if(v < -1000 | v > 3096)
-                            Assert.Fail("Invalid HU value. I({0},{1},{2})=({3})", i, j, k, v);
+                            Assert.Fail(string.Format("Invalid HU value. I({0},{1},{2})=({3})", i, j, k, v));
                     }
                 }
             }

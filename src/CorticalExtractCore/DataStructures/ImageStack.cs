@@ -24,7 +24,7 @@ namespace CorticalExtract.DataStructures
 
         public static ImageStack FromFile(string path, int width, int height, int slices, VoxelFormat fmt, float[] voxDim, int[] sliceSelect = null)
         {
-            int[] sel = null;
+            int[] sel;
 
             if (sliceSelect == null)
             {
@@ -38,11 +38,16 @@ namespace CorticalExtract.DataStructures
 
             ImageStack ret = new ImageStack(height, width, sel.Length, voxDim);
 
-            int itemSize = 2;
+            int itemSize = fmt switch
+            {
+                VoxelFormat.UShortLE or VoxelFormat.ShortLE or VoxelFormat.ShortBE => 2,
+                VoxelFormat.FloatBE or VoxelFormat.FloatLE => 4,
+                _ => throw new ArgumentException(nameof(fmt))
+            };
             if (fmt == VoxelFormat.FloatBE | fmt == VoxelFormat.FloatLE) itemSize = 4;
             int buffSize = width * height * itemSize;
 
-            BinaryReader sr = new BinaryReader(new FileStream(path, FileMode.Open, FileAccess.Read));
+            using BinaryReader sr = new BinaryReader(new FileStream(path, FileMode.Open, FileAccess.Read));
             byte[] buffer = new byte[buffSize];
 
             int curSliceIdx = 0;

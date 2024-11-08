@@ -35,35 +35,35 @@ namespace CorticalExtract.Processing
         public int slice;
         public float min0, min1, min2, max0, max1, max2;
 
-        void ParseInt(string text, int def, out int dest)
+        static void ParseInt(string text, int def, out int dest)
         {
             if (!int.TryParse(text, out dest))
                 dest = def;
         }
 
-        void ParseFloat(string text, float def, out float dest)
+        static void ParseFloat(string text, float def, out float dest)
         {
             if (!float.TryParse(text, out dest))
                 dest = def;
         }
 
-        void ParseBool(string text, bool def, out bool dest)
+        static void ParseBool(string text, bool def, out bool dest)
         {
             if (!bool.TryParse(text, out dest))
                 dest = def;
         }
 
-        ImageStack.VoxelFormat ParseFormat(string text, ImageStack.VoxelFormat def)
+        static ImageStack.VoxelFormat ParseFormat(string text, ImageStack.VoxelFormat def)
         {
-            switch (text)
+            return text switch
             {
-                case "i16": return ImageStack.VoxelFormat.ShortLE;
-                case "i16b": return ImageStack.VoxelFormat.ShortBE;
-                case "f32": return ImageStack.VoxelFormat.FloatLE;
-                case "f32b": return ImageStack.VoxelFormat.FloatBE;
-            }
-
-            return def;
+                "u16" => ImageStack.VoxelFormat.UShortLE,
+                "i16" => ImageStack.VoxelFormat.ShortLE,
+                "i16b" => ImageStack.VoxelFormat.ShortBE,
+                "f32" => ImageStack.VoxelFormat.FloatLE,
+                "f32b" => ImageStack.VoxelFormat.FloatBE,
+                _ => def
+            };
         }
     }
 }

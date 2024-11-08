@@ -1,6 +1,7 @@
 ﻿using CorticalExtract.AxisRefinement;
 using CorticalExtract.DataStructures;
 using System;
+using System.Globalization;
 using System.Numerics;
 using System.Text;
 
@@ -350,7 +351,7 @@ namespace CorticalExtract.Processing
             int n = axisPoints.Length;
             for (int i = 0; i < n; i++)
             {
-                sb.AppendFormat("{0},{1},{2}",
+                sb.AppendFormat(CultureInfo.InvariantCulture, "{0},{1},{2}",
                     (axisPoints[i].X - axisPoints[n / 2].X) * voxelDimensions[0],
                     (axisPoints[i].Y - axisPoints[n / 2].Y) * voxelDimensions[1],
                     (axisPoints[i].Z - axisPoints[n / 2].Z) * voxelDimensions[2]);
@@ -360,7 +361,7 @@ namespace CorticalExtract.Processing
             return sb.ToString();
         }
 
-        public string BoundaryToMesh(Vector2[,] bnd, Vector3[] axis, Vector3 t0, Vector3 t1, float[] voxDim)
+        public static string BoundaryToMesh(Vector2[,] bnd, Vector3[] axis, Vector3 t0, Vector3 t1, float[] voxDim)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -372,7 +373,7 @@ namespace CorticalExtract.Processing
                 for (int j = 0; j < rays; j++)
                 {
                     Vector3 pt = axis[i] + t0 * bnd[i, j].X + t1 * bnd[i, j].Y - axis[slices / 2];
-                    sb.AppendLine(string.Format("v {0} {1} {2}",
+                    sb.AppendLine(string.Format(CultureInfo.InvariantCulture, "v {0} {1} {2}",
                         pt.X * voxDim[0], pt.Y * voxDim[1], pt.Z * voxDim[2]));
                 }
             }
@@ -384,10 +385,10 @@ namespace CorticalExtract.Processing
                     int j1 = j + 1;
                     if (j1 >= rays) j1 = 0;
 
-                    sb.AppendLine(string.Format("f {0} {1} {2}",
+                    sb.AppendLine(string.Format(CultureInfo.InvariantCulture, "f {0} {1} {2}",
                         1 + i * rays + j, 1 + i * rays + j1, 1 + (i + 1) * rays + j));
 
-                    sb.AppendLine(string.Format("f {0} {1} {2}",
+                    sb.AppendLine(string.Format(CultureInfo.InvariantCulture, "f {0} {1} {2}",
                         1 + i * rays + j1, 1 + (i + 1) * rays + j1, 1 + (i + 1) * rays + j));
                 }
             }
@@ -405,9 +406,9 @@ namespace CorticalExtract.Processing
             for (int i = 0; i < n; i++)
             {
                 for (int j = 0; j < m - 1; j++)
-                    sb.AppendFormat("{0},", thickness[i, j]);
+                    sb.AppendFormat(CultureInfo.InvariantCulture, "{0},", thickness[i, j]);
 
-                sb.AppendFormat("{0}", thickness[i, m - 1]);
+                sb.AppendFormat(CultureInfo.InvariantCulture, "{0}", thickness[i, m - 1]);
                 sb.AppendLine();
             }
 

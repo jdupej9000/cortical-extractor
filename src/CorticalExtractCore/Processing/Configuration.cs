@@ -143,7 +143,7 @@ namespace CorticalExtract.Processing
                 AxisMode.CrossSectionCentroids => new AxisRefinementCrossCentroids(new PassthroughPathSmoothing()),
                 AxisMode.CrossSectionLinear => new AxisRefinementCrossCentroids(new LinearPathSmoothing(), true),
                 AxisMode.CrossSectionGaussian => new AxisRefinementCrossCentroids(new GaussianPathSmoothing(AxisGaussianBandwidth)),
-                _ => null
+                _ => throw new InvalidOperationException()
             };
         }
     }

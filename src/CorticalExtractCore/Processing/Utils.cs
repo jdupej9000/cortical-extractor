@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace CorticalExtract.Processing
@@ -16,6 +17,7 @@ namespace CorticalExtract.Processing
             return v;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Blend(float a, float b, float r)
         {
             return (1 - r) * a + r * b;
@@ -61,12 +63,12 @@ namespace CorticalExtract.Processing
 
             if (nonNa.Count == 0) return def;
 
-            return Mean(nonNa.ToArray());
+            return Mean(nonNa);
         }
 
-        public static float Mean(float[] x)
+        public static float Mean(IReadOnlyList<float> x)
         {
-            int n = x.Length;
+            int n = x.Count;
             float ret = 0.0f;
 
             for (int i = 0; i < n; i++)
@@ -78,6 +80,9 @@ namespace CorticalExtract.Processing
         public static void OlsFit(float[] x, float[] y, out float a, out float b)
         {
             int n = x.Length;
+
+            if (y.Length != n) 
+                throw new InvalidOperationException("x and y must have the same lengths");
 
             float muX = Mean(x);
             float muY = Mean(y);

@@ -118,7 +118,7 @@ namespace CorticalExtract.Processing
                 int x1 = hash.x;
                 int y1 = hash.y;
 
-                if (x1 < 0 | x1 >= width | y1 < 0 | y1 >= height) continue;
+                if (x1 < 0 || x1 >= width || y1 < 0 || y1 >= height) continue;
                 if (GetMask(x1, y1) != 0) continue;
                 if (!sr(stack, x1, y1, activeSlice)) continue;
 

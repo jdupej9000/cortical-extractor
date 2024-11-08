@@ -210,28 +210,5 @@ namespace CorticalExtract.Processing
             //return rc(origin, direction, outside? r0 - halfMaxRadius : r0 + halfMaxRadius, halfMax);
             return ret;
         }
-
-        public float AutoThreshold(Vector2 origin, Vector2 direction, float maxRadius)
-        {
-            float t = 0;
-            List<float> path = new List<float>();
-
-            float q = 0.85f;
-
-            while (t < maxRadius)
-            {
-                float f = stack.SampleSlice(origin.X + t * direction.X, origin.Y + t * direction.Y, slice);
-                path.Add(f);
-                t += DELTA;
-            }
-
-            path.Sort();
-
-            int idx = (int)(((float)path.Count) * q);
-
-            float thr = path[idx];
-
-            return thr;
-        }
     }
 }

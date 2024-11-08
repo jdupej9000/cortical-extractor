@@ -1,4 +1,5 @@
 ﻿using CorticalExtract.DataStructures;
+using System.Globalization;
 using System.Numerics;
 
 namespace CorticalExtract.Processing
@@ -43,43 +44,36 @@ namespace CorticalExtract.Processing
 
         void ParseInt(string text, int def, out int dest)
         {
-            if (!int.TryParse(text, out dest))
+            if (!int.TryParse(text, CultureInfo.InvariantCulture, out dest))
                 dest = def;
         }
 
         void ParseFloat(string text, float def, out float dest)
         {
-            if (!float.TryParse(text, out dest))
+            if (!float.TryParse(text, CultureInfo.InvariantCulture, out dest))
                 dest = def;
         }
 
-        void ParseBool(string text, bool def, out bool dest)
+        static ImageStack.VoxelFormat ParseFormat(string text, ImageStack.VoxelFormat def)
         {
-            if (!bool.TryParse(text, out dest))
-                dest = def;
-        }
-
-        ImageStack.VoxelFormat ParseFormat(string text, ImageStack.VoxelFormat def)
-        {
-            switch (text)
+            return text switch
             {
-                case "u16": return ImageStack.VoxelFormat.UShortLE;
-                case "i16": return ImageStack.VoxelFormat.ShortLE;
-                case "i16b": return ImageStack.VoxelFormat.ShortBE;
-                case "f32": return ImageStack.VoxelFormat.FloatLE;
-                case "f32b": return ImageStack.VoxelFormat.FloatBE;
-            }
-
-            return def;
+                "u16" => ImageStack.VoxelFormat.UShortLE,
+                "i16" => ImageStack.VoxelFormat.ShortLE,
+                "i16b" => ImageStack.VoxelFormat.ShortBE,
+                "f32" => ImageStack.VoxelFormat.FloatLE,
+                "f32b" => ImageStack.VoxelFormat.FloatBE,
+                _ => def
+            };
         }
 
-        void ParseVector3(string tX, string tY, string tZ, Vector3 def, out Vector3 dest)
+        static void ParseVector3(string tX, string tY, string tZ, Vector3 def, out Vector3 dest)
         {
             float x, y, z;
             bool valid = true;
-            valid &= float.TryParse(tX, out x);
-            valid &= float.TryParse(tY, out y);
-            valid &= float.TryParse(tZ, out z);
+            valid &= float.TryParse(tX, CultureInfo.InvariantCulture, out x);
+            valid &= float.TryParse(tY, CultureInfo.InvariantCulture, out y);
+            valid &= float.TryParse(tZ, CultureInfo.InvariantCulture, out z);
 
             if (valid) dest = new Vector3(x, y, z);
             else dest = def;

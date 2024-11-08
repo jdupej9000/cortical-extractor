@@ -3,7 +3,6 @@ using System;
 using System.IO;
 using System.Numerics;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace CorticalExtract.DataStructures
 {
@@ -39,31 +38,24 @@ namespace CorticalExtract.DataStructures
 
             ImageStack ret = new ImageStack(height, width, sel.Length, voxDim);
 
-            try
+            int itemSize = 2;
+            if (fmt == VoxelFormat.FloatBE | fmt == VoxelFormat.FloatLE) itemSize = 4;
+            int buffSize = width * height * itemSize;
+
+            BinaryReader sr = new BinaryReader(new FileStream(path, FileMode.Open, FileAccess.Read));
+            byte[] buffer = new byte[buffSize];
+
+            int curSliceIdx = 0;
+            for (int i = 0; i < slices; i++)
             {
-                int itemSize = 2;
-                if (fmt == VoxelFormat.FloatBE | fmt == VoxelFormat.FloatLE) itemSize = 4;
-                int buffSize = width * height * itemSize;
+                sr.Read(buffer, 0, buffSize);
 
-                BinaryReader sr = new BinaryReader(new FileStream(path, FileMode.Open, FileAccess.Read));
-                byte[] buffer = new byte[buffSize];
-
-                int curSliceIdx = 0;
-                for (int i = 0; i < slices; i++)
+                if (i == sel[curSliceIdx])
                 {
-                    sr.Read(buffer, 0, buffSize);
-
-                    if (i == sel[curSliceIdx])
-                    {
-                        ret.SetSliceFromBinary(curSliceIdx, buffer, fmt);
-                        curSliceIdx++;
-                        if (curSliceIdx >= sel.Length) break;
-                    }
+                    ret.SetSliceFromBinary(curSliceIdx, buffer, fmt);
+                    curSliceIdx++;
+                    if (curSliceIdx >= sel.Length) break;
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
             }
 
             return ret;
